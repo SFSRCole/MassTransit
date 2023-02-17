@@ -17,6 +17,11 @@
             _values = new ConcurrentDictionary<Uri, byte[]>();
         }
 
+        public Task Delete(IMessageData address, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
         {
             if (address == null)

@@ -63,5 +63,10 @@
 
             return new GridFSUploadOptions { Metadata = metadata };
         }
+
+        Task IMessageDataRepository.Delete(IMessageData address, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

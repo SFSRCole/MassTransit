@@ -151,5 +151,11 @@ namespace MassTransit.AzureStorage.MessageData
                 await blob.SetMetadataAsync(metadata).ConfigureAwait(false);
             }
         }
+
+        public Task Delete(IMessageData messageData, CancellationToken cancellationToken = default)
+        {
+
+            throw new NotImplementedException();
+        }
     }
 }

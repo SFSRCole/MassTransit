@@ -82,5 +82,10 @@ namespace MassTransit.MessageData
 
             return Path.Combine(elements);
         }
+
+        public Task Delete(IMessageData address, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
