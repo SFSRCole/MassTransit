@@ -8,6 +8,7 @@ namespace MassTransit.Tests.Serialization
     using MassTransit.Serialization;
     using MassTransit.Testing;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -31,7 +32,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(complaint);
 
-            Assert.That(complaint.Equals(result), Is.True);
+            complaint.Equals(result).ShouldBe(true);
         }
 
         [Test]
@@ -53,7 +54,7 @@ namespace MassTransit.Tests.Serialization
 
             await pipe.Send(new TestConsumeContext<ComplaintAdded>(complaint));
 
-            Assert.That(consumer.Received.Select<ComplaintAdded>().Any(), Is.True);
+            consumer.Received.Select<ComplaintAdded>().Any().ShouldBe(true);
         }
 
         public Deserializing_an_interface(Type serializerType)

@@ -3,6 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -21,7 +22,7 @@
 
             await Task.Delay(50);
 
-            Assert.That(_consumer.Count, Is.EqualTo(1));
+            _consumer.Count.ShouldBe(1);
         }
 
         MyConsumer _consumer;

@@ -5,6 +5,7 @@ namespace MassTransit.Tests.Serialization
     using InMemoryTransport;
     using MassTransit.Serialization;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -139,14 +140,14 @@ namespace MassTransit.Tests.Serialization
 
             consumeContext.TryGetMessage(out ConsumeContext<T> messageContext);
 
-            Assert.That(messageContext, Is.Not.Null);
+            messageContext.ShouldNotBe(null);
 
-            Assert.That(messageContext.SourceAddress, Is.EqualTo(_sourceAddress));
-            Assert.That(messageContext.DestinationAddress, Is.EqualTo(_destinationAddress));
-            Assert.That(messageContext.FaultAddress, Is.EqualTo(_faultAddress));
-            Assert.That(messageContext.ResponseAddress, Is.EqualTo(_responseAddress));
-            Assert.That(messageContext.RequestId.HasValue, Is.EqualTo(true));
-            Assert.That(messageContext.RequestId.Value, Is.EqualTo(_requestId));
+            messageContext.SourceAddress.ShouldBe(_sourceAddress);
+            messageContext.DestinationAddress.ShouldBe(_destinationAddress);
+            messageContext.FaultAddress.ShouldBe(_faultAddress);
+            messageContext.ResponseAddress.ShouldBe(_responseAddress);
+            messageContext.RequestId.HasValue.ShouldBe(true);
+            messageContext.RequestId.Value.ShouldBe(_requestId);
 
             return messageContext.Message;
         }
@@ -156,7 +157,7 @@ namespace MassTransit.Tests.Serialization
         {
             var result = SerializeAndReturn(message);
 
-            Assert.That(message, Is.EqualTo(result));
+            message.Equals(result).ShouldBe(true);
         }
     }
 }

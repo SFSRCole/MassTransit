@@ -7,6 +7,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using Scenarios;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Messages;
     using Testing;
@@ -23,15 +24,18 @@
             await InputQueueSendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimpleConsumer.LastConsumer;
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last;
-            Assert.That(last.Name, Is.EqualTo(name));
+            last.Name
+                .ShouldBe(name);
 
             var wasDisposed = await lastConsumer.Dependency.WasDisposed;
-            Assert.That(wasDisposed, Is.True, "Dependency was not disposed" );
+            wasDisposed
+                .ShouldBe(true); //Dependency was not disposed");
 
-            Assert.That(lastConsumer.Dependency.SomethingDone, Is.True, "Dependency was disposed before consumer executed");
+            lastConsumer.Dependency.SomethingDone
+                .ShouldBe(true); //Dependency was disposed before consumer executed");
         }
 
         protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)
@@ -64,18 +68,21 @@
             await InputQueueSendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimpleConsumer.LastConsumer.OrCanceled(InMemoryTestHarness.TestCancellationToken);
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last;
-            Assert.That(last.Name, Is.EqualTo(name));
+            last.Name
+                .ShouldBe(name);
 
             var wasDisposed = await lastConsumer.Dependency.WasDisposed;
-            Assert.That(wasDisposed, Is.True, "Dependency was not disposed");
+            wasDisposed
+                .ShouldBe(true); //Dependency was not disposed");
 
-            Assert.That(lastConsumer.Dependency.SomethingDone, Is.True, "Dependency was disposed before consumer executed");
+            lastConsumer.Dependency.SomethingDone
+                .ShouldBe(true); //Dependency was disposed before consumer executed");
 
             var lasterConsumer = await SimplerConsumer.LastConsumer.OrCanceled(InMemoryTestHarness.TestCancellationToken);
-            Assert.That(lasterConsumer, Is.Not.Null);
+            lasterConsumer.ShouldNotBe(null);
 
             var laster = await lasterConsumer.Last.OrCanceled(InMemoryTestHarness.TestCancellationToken);
         }
@@ -115,15 +122,18 @@
             await InputQueueSendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimpleConsumer.LastConsumer;
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last;
-            Assert.That(last.Name, Is.EqualTo(name));
+            last.Name
+                .ShouldBe(name);
 
             var wasDisposed = await lastConsumer.Dependency.WasDisposed;
-            Assert.That(wasDisposed, Is.True, "Dependency was not disposed");
+            wasDisposed
+                .ShouldBe(true); //Dependency was not disposed");
 
-            Assert.That(lastConsumer.Dependency.SomethingDone, Is.True, "Dependency was disposed before consumer executed");
+            lastConsumer.Dependency.SomethingDone
+                .ShouldBe(true); //Dependency was disposed before consumer executed");
         }
 
         protected override IServiceCollection ConfigureServices(IServiceCollection collection)
@@ -477,7 +487,7 @@
             await sendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimplerConsumer.LastConsumer.OrCanceled(InMemoryTestHarness.InactivityToken);
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last.OrCanceled(InMemoryTestHarness.InactivityToken);
         }

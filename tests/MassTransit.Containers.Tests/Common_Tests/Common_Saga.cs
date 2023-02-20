@@ -4,6 +4,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
     using System.Threading.Tasks;
     using NUnit.Framework;
     using Scenarios;
+    using Shouldly;
     using TestFramework;
     using Testing;
 
@@ -22,7 +23,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             Guid? foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         [Test]
@@ -36,7 +37,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             Guid? foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
 
             var nextMessage = new SecondSagaMessage { CorrelationId = sagaId };
 
@@ -44,7 +45,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(x => x.CorrelationId == sagaId && x.Second.IsCompleted, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         [Test]
@@ -58,7 +59,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             Guid? foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
 
             var nextMessage = new ThirdSagaMessage { CorrelationId = sagaId };
 
@@ -66,7 +67,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(x => x.CorrelationId == sagaId && x.Third.IsCompleted, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)
@@ -98,7 +99,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             Guid? foundId = await GetSagaRepository<SimpleSaga>().ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         [Test]
@@ -114,7 +115,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
 
             Guid? foundId = await GetSagaRepository<SecondSimpleSaga>().ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)

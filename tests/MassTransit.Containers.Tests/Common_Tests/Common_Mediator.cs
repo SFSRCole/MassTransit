@@ -7,6 +7,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using Scenarios;
+    using Shouldly;
     using TestFramework;
     using Testing;
 
@@ -22,7 +23,7 @@ namespace MassTransit.Containers.Tests.Common_Tests
             await Mediator.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimplerConsumer.LastConsumer.OrCanceled(InMemoryTestHarness.TestCancellationToken);
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             await lastConsumer.Last.OrCanceled(InMemoryTestHarness.TestCancellationToken);
         }

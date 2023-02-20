@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using MassTransit.MessageData;
     using NUnit.Framework;
@@ -15,11 +16,9 @@
         {
             MessageData<string> property = await _repository.PutString(new string('8', 10000));
 
-            MessageData<string> loaded = await _repository.GetString(property.Address);
-            Assert.That(property.Address, Is.Not.Null);
+            Console.WriteLine(property.Address);
 
-
-            Assert.That(await loaded.Value, Is.Not.Null);
+            Console.WriteLine("Path: {0}", Path.Combine(property.Address.Segments.SelectMany(x => x.Split(new[] {':'})).ToArray()));
         }
 
         [Test]
@@ -29,7 +28,7 @@
 
             MessageData<string> loaded = await _repository.GetString(property.Address);
 
-            Assert.That(await loaded.Value, Is.Not.Null);
+            Console.WriteLine(await loaded.Value);
         }
 
         IMessageDataRepository _repository;

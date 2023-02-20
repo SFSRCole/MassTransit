@@ -5,6 +5,7 @@
     using System.Linq;
     using MassTransit.Serialization;
     using NUnit.Framework;
+    using Shouldly;
 
 
     [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
@@ -23,7 +24,7 @@
 
             var result = SerializeAndReturn(message);
 
-            Assert.That(result.Items.Count(), Is.EqualTo(message.Items.Count()));
+            result.Items.Count().ShouldBe(message.Items.Count());
         }
 
         public Deserializing_an_enumerable_property(Type serializerType)

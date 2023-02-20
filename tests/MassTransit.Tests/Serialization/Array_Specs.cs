@@ -7,6 +7,7 @@
         using System.Text;
         using MassTransit.Serialization;
         using NUnit.Framework;
+        using Shouldly;
 
 
         [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
@@ -33,7 +34,7 @@
 
                 var result = Return<SomeArray>(Encoding.UTF8.GetBytes(source));
 
-                Assert.That(result.Elements, Is.Null);
+                result.Elements.ShouldBe(null);
             }
 
             [Test]
@@ -43,8 +44,8 @@
 
                 var result = SerializeAndReturn(someArray);
 
-                Assert.That(someArray.Elements, Is.Null);
-                Assert.That(result.Elements, Is.Null);
+                someArray.Elements.ShouldBe(null);
+                result.Elements.ShouldBe(null);
             }
 
             [Test]
@@ -57,8 +58,8 @@
 
                 var result = SerializeAndReturn(someArray);
 
-                Assert.That(result.Elements, Is.Not.Null);
-                Assert.That(result.Elements.Length, Is.EqualTo(1));
+                result.Elements.ShouldNotBe(null);
+                result.Elements.Length.ShouldBe(1);
             }
 
             [Test]
@@ -69,8 +70,8 @@
 
                 var result = SerializeAndReturn(someArray);
 
-                Assert.That(result.Elements, Is.Not.Null);
-                Assert.That(result.Elements.Count, Is.EqualTo(1));
+                result.Elements.ShouldNotBe(null);
+                result.Elements.Count.ShouldBe(1);
             }
 
             public A_null_array(Type serializerType)

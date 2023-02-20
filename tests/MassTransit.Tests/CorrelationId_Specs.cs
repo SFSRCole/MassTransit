@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Messages;
 
@@ -19,8 +20,8 @@
 
             ConsumeContext<PingMessage> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(pingMessage.CorrelationId));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(pingMessage.CorrelationId);
         }
 
         Task<ConsumeContext<PingMessage>> _handled;
@@ -45,8 +46,8 @@
 
             ConsumeContext<PingMessage> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(pingMessage.CorrelationId));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(pingMessage.CorrelationId);
         }
 
         Task<ConsumeContext<PingMessage>> _handled;
@@ -71,8 +72,8 @@
 
             ConsumeContext<A> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(message.CorrelationId));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(message.CorrelationId);
         }
 
         Task<ConsumeContext<A>> _handled;
@@ -103,8 +104,8 @@
 
             ConsumeContext<A> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(message.CommandId));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(message.CommandId);
         }
 
         Task<ConsumeContext<A>> _handled;
@@ -135,8 +136,8 @@
 
             ConsumeContext<A> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(message.EventId));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(message.EventId);
         }
 
         Task<ConsumeContext<A>> _handled;
@@ -168,8 +169,8 @@
 
             ConsumeContext<A> context = await _handled;
 
-            Assert.That(context.CorrelationId.HasValue, Is.True);
-            Assert.That(context.CorrelationId.Value, Is.EqualTo(message.CorrelationId.Value));
+            context.CorrelationId.HasValue.ShouldBe(true);
+            context.CorrelationId.Value.ShouldBe(message.CorrelationId.Value);
         }
 
         Task<ConsumeContext<A>> _handled;

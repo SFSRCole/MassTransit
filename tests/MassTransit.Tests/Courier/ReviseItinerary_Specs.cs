@@ -5,6 +5,7 @@
     using MassTransit.Courier.Contracts;
     using MassTransit.Testing;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Courier;
 
@@ -72,7 +73,7 @@
             await reviseActivityCompleted;
             ConsumeContext<RoutingSlipActivityCompleted> testActivityResult = await testActivityCompleted;
 
-            Assert.That(testActivityResult.GetArgument<string>("Value"), Is.EqualTo("Added"));
+            testActivityResult.GetArgument<string>("Value").ShouldBe("Added");
         }
 
         [Test]
@@ -108,7 +109,7 @@
             Assert.AreEqual(1, revisions.Message.DiscardedItinerary.Length);
             Assert.AreEqual(0, revisions.Message.Itinerary.Length);
 
-            Assert.That(testActivityCompleted.Wait(TimeSpan.FromSeconds(3)), Is.False);
+            testActivityCompleted.Wait(TimeSpan.FromSeconds(3)).ShouldBe(false);
         }
 
         protected override void SetupActivities(BusTestHarness testHarness)

@@ -2,6 +2,7 @@ namespace MassTransit.Containers.Tests.Scenarios
 {
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -17,15 +18,18 @@ namespace MassTransit.Containers.Tests.Scenarios
             await InputQueueSendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimpleConsumer.LastConsumer;
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last;
-            Assert.That(last.Name, Is.EqualTo(name));
+            last.Name
+                .ShouldBe(name);
 
             var wasDisposed = await lastConsumer.Dependency.WasDisposed;
-            Assert.That(wasDisposed, Is.True, "Dependency was not disposed");
+            wasDisposed
+                .ShouldBe(true); //Dependency was not disposed");
 
-            Assert.That(lastConsumer.Dependency.SomethingDone, Is.True, "Dependency was disposed before consumer executed");
+            lastConsumer.Dependency.SomethingDone
+                .ShouldBe(true); //Dependency was disposed before consumer executed");
         }
     }
 
@@ -42,15 +46,18 @@ namespace MassTransit.Containers.Tests.Scenarios
             await InputQueueSendEndpoint.Send(new SimpleMessageClass(name));
 
             var lastConsumer = await SimpleConsumer.LastConsumer;
-            Assert.That(lastConsumer, Is.Not.Null);
+            lastConsumer.ShouldNotBe(null);
 
             var last = await lastConsumer.Last;
-            Assert.That(last.Name, Is.EqualTo(name));
+            last.Name
+                .ShouldBe(name);
 
             var wasDisposed = await lastConsumer.Dependency.WasDisposed;
-            Assert.That(wasDisposed, Is.True, "Dependency was not disposed");
+            wasDisposed
+                .ShouldBe(true); //Dependency was not disposed");
 
-            Assert.That(lastConsumer.Dependency.SomethingDone, Is.True, "Dependency was disposed before consumer executed");
+            lastConsumer.Dependency.SomethingDone
+                .ShouldBe(true); //Dependency was disposed before consumer executed");
         }
     }
 }

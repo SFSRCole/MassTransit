@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -16,8 +17,8 @@
 
             ConsumeContext<A> result = await _received;
 
-            Assert.That(result.Message.First, Is.EqualTo("Hello"));
-            Assert.That(result.Message.Second, Is.Null);
+            result.Message.First.ShouldBe("Hello");
+            result.Message.Second.ShouldBe(null);
         }
 
         Task<ConsumeContext<A>> _received;
@@ -58,8 +59,8 @@
 
             ConsumeContext<A> result = await _received;
 
-            Assert.That(result.Message.First, Is.EqualTo("Hello"));
-            Assert.That(result.Message.Second, Is.EqualTo("World"));
+            result.Message.First.ShouldBe("Hello");
+            result.Message.Second.ShouldBe("World");
         }
 
         Task<ConsumeContext<A>> _received;
@@ -100,8 +101,8 @@
 
             ConsumeContext<A> result = await _received;
 
-            Assert.That(result.Message.First, Is.EqualTo("Hello"));
-            Assert.That(result.Message.Second, Is.EqualTo("World"));
+            result.Message.First.ShouldBe("Hello");
+            result.Message.Second.ShouldBe("World");
         }
 
         Task<ConsumeContext<A>> _received;
@@ -142,8 +143,8 @@
 
             ConsumeContext<A> result = await _received;
 
-            Assert.That(result.Message.First, Is.EqualTo("Hello"));
-            Assert.That(result.Message.Second, Is.Null);
+            result.Message.First.ShouldBe("Hello");
+            result.Message.Second.ShouldBe(null);
         }
 
         Task<ConsumeContext<A>> _received;

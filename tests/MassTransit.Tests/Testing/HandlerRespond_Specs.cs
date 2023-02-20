@@ -4,6 +4,7 @@ namespace MassTransit.Tests.Testing
     using System.Threading.Tasks;
     using MassTransit.Testing;
     using NUnit.Framework;
+    using Shouldly;
 
 
     public class When_a_handler_responds_to_a_message
@@ -38,15 +39,15 @@ namespace MassTransit.Tests.Testing
         public async Task Should_have_sent_message_to_bus_address()
         {
             ISentMessage<B> message = await _harness.Sent.SelectAsync<B>().First();
-            Assert.That(message, Is.Not.Null);
+            message.ShouldNotBeNull();
 
-            Assert.That(message.Context.DestinationAddress, Is.EqualTo(_harness.BusAddress));
+            message.Context.DestinationAddress.ShouldBe(_harness.BusAddress);
         }
 
         [Test]
         public void Should_support_a_simple_handler()
         {
-            Assert.That(_handler.Consumed.Select().Any(), Is.True);
+            _handler.Consumed.Select().Any().ShouldBe(true);
         }
 
 

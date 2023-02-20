@@ -6,6 +6,7 @@
     using MassTransit.Tests.Saga.Messages;
     using Microsoft.Data.SqlClient;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using Testing;
 
@@ -25,7 +26,7 @@
 
             Guid? foundId = await _sagaRepository.Value.ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
 
             var nextMessage = new CompleteSimpleSaga { CorrelationId = sagaId };
 
@@ -33,7 +34,7 @@
 
             foundId = await _sagaRepository.Value.ShouldContainSaga(x => x.CorrelationId == sagaId && x.Completed, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
 
         [Test]
@@ -46,9 +47,9 @@
 
             Guid? foundId = await _sagaRepository.Value.ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(foundId.HasValue, Is.True);
+            foundId.HasValue.ShouldBe(true);
         }
-            
+
         [Test]
         public async Task An_observed_message_should_find_and_update_the_correct_saga()
         {
@@ -59,14 +60,14 @@
 
             Guid? found = await _sagaRepository.Value.ShouldContainSaga(message.CorrelationId, TestTimeout);
 
-            Assert.That(found, Is.EqualTo(sagaId));
+            found.ShouldBe(sagaId);
 
             var nextMessage = new ObservableSagaMessage { Name = "MySimpleSaga" };
 
             await InputQueueSendEndpoint.Send(nextMessage);
 
             found = await _sagaRepository.Value.ShouldContainSaga(x => x.CorrelationId == sagaId && x.Observed, TestTimeout);
-            Assert.That(found, Is.EqualTo(sagaId));
+            found.ShouldBe(sagaId);
         }
 
         [OneTimeSetUp]

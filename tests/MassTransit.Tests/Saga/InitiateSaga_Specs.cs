@@ -5,6 +5,7 @@ namespace MassTransit.Tests.Saga
     using MassTransit.Testing;
     using Messages;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -21,7 +22,7 @@ namespace MassTransit.Tests.Saga
 
             Guid? sagaId = await _repository.ShouldContainSaga(_sagaId, TestTimeout);
 
-            Assert.That(sagaId.HasValue, Is.True);
+            sagaId.HasValue.ShouldBe(true);
         }
 
         public When_an_initiating_message_for_a_saga_arrives()
@@ -68,7 +69,7 @@ namespace MassTransit.Tests.Saga
 
             Guid? sagaId = await _repository.ShouldContainSaga(_sagaId, TestTimeout);
 
-            Assert.That(sagaId.HasValue, Is.True);
+            sagaId.HasValue.ShouldBe(true);
 
             await InputQueueSendEndpoint.Send(message);
 
@@ -111,7 +112,7 @@ namespace MassTransit.Tests.Saga
 
             sagaId = await _repository.ShouldContainSaga(x => x.Completed, TestTimeout);
 
-            Assert.That(sagaId.HasValue, Is.True);
+            sagaId.HasValue.ShouldBe(true);
         }
 
         public When_an_initiating_and_orchestrated_message_for_a_saga_arrives()
@@ -150,7 +151,7 @@ namespace MassTransit.Tests.Saga
 
             sagaId = await _repository.ShouldContainSaga(x => x.Observed, TestTimeout);
 
-            Assert.That(sagaId.HasValue, Is.True);
+            sagaId.HasValue.ShouldBe(true);
         }
 
         public When_an_initiating_and_observed_message_for_a_saga_arrives()

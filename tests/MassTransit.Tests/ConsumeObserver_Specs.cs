@@ -7,6 +7,7 @@ namespace MassTransit.Tests
         using MassTransit.Testing;
         using MassTransit.Testing.Implementations;
         using NUnit.Framework;
+        using Shouldly;
         using TestFramework;
         using TestFramework.Messages;
 
@@ -27,7 +28,7 @@ namespace MassTransit.Tests
             {
                 IReceivedMessage<PingMessage> context = _observer.Messages.Select<PingMessage>().First();
 
-                Assert.That(context, Is.Not.Null);
+                context.ShouldNotBeNull();
             }
 
             TestConsumeMessageObserver<PingMessage> _pingObserver;
@@ -89,7 +90,7 @@ namespace MassTransit.Tests
 
                 IReceivedMessage<PingMessage> context = observer.Messages.Select<PingMessage>().First();
 
-                Assert.That(context, Is.Not.Null);
+                context.ShouldNotBeNull();
             }
 
             [Test]

@@ -6,6 +6,7 @@
     using MassTransit.Serialization;
     using Messages;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework.Messages;
 
 
@@ -31,7 +32,7 @@
 
             var result = SerializeAndReturn(msg);
 
-            Assert.That(result.Contents, Is.EquivalentTo(msg.Contents));
+            result.Contents.SequenceEqual(msg.Contents).ShouldBeTrue();
         }
 
         [Test]

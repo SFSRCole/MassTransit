@@ -5,6 +5,7 @@ namespace MassTransit.Tests.Configuration
     using NUnit.Framework;
     using Saga;
     using Saga.Messages;
+    using Shouldly;
 
 
     public class When_a_saga_is_inspected
@@ -20,31 +21,31 @@ namespace MassTransit.Tests.Configuration
         [Test]
         public void Should_create_the_builder()
         {
-            Assert.That(_factory, Is.Not.Null);
+            _factory.ShouldNotBe(null);
         }
 
         [Test]
         public void Should_have_three_subscription_types()
         {
-            Assert.That(_factory.Connectors.Count(), Is.EqualTo(3));
+            _factory.Connectors.Count().ShouldBe(3);
         }
 
         [Test]
         public void Should_have_an_a()
         {
-            Assert.That(_factory.Connectors.First().MessageType, Is.EqualTo(typeof(InitiateSimpleSaga)));
+            _factory.Connectors.First().MessageType.ShouldBe(typeof(InitiateSimpleSaga));
         }
 
         [Test]
         public void Should_have_a_b()
         {
-            Assert.That(_factory.Connectors.Skip(1).First().MessageType, Is.EqualTo(typeof(CompleteSimpleSaga)));
+            _factory.Connectors.Skip(1).First().MessageType.ShouldBe(typeof(CompleteSimpleSaga));
         }
 
         [Test]
         public void Should_have_a_c()
         {
-            Assert.That(_factory.Connectors.Skip(2).First().MessageType, Is.EqualTo(typeof(ObservableSagaMessage)));
+            _factory.Connectors.Skip(2).First().MessageType.ShouldBe(typeof(ObservableSagaMessage));
         }
     }
 }

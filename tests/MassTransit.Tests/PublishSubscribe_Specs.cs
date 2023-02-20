@@ -3,6 +3,7 @@ namespace MassTransit.Tests
     using System;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Messages;
 
@@ -63,8 +64,8 @@ namespace MassTransit.Tests
 
             ConsumeContext<PingMessage> context = await _received;
 
-            Assert.That(context.RequestId.HasValue, Is.True);
-            Assert.That(context.RequestId.Value, Is.EqualTo(_requestId));
+            context.RequestId.HasValue.ShouldBe(true);
+            context.RequestId.Value.ShouldBe(_requestId);
         }
 
         Task<ConsumeContext<PingMessage>> _received;
@@ -89,8 +90,8 @@ namespace MassTransit.Tests
 
             ConsumeContext<PingMessage> context = await _received;
 
-            Assert.That(context.RequestId.HasValue, Is.True);
-            Assert.That(context.RequestId.Value, Is.EqualTo(_requestId));
+            context.RequestId.HasValue.ShouldBe(true);
+            context.RequestId.Value.ShouldBe(_requestId);
         }
 
         Task<ConsumeContext<PingMessage>> _received;
@@ -115,7 +116,7 @@ namespace MassTransit.Tests
 
             ConsumeContext<PingMessage> consumeContext = await _received;
 
-            Assert.That(consumeContext.RequestId, Is.EqualTo(_requestId));
+            consumeContext.RequestId.ShouldBe(_requestId);
         }
 
         Task<ConsumeContext<PingMessage>> _received;
@@ -160,8 +161,8 @@ namespace MassTransit.Tests
 
             ConsumeContext<PingMessage> context = await _received;
 
-            Assert.That(context.RequestId.HasValue, Is.True);
-            Assert.That(context.RequestId, Is.EqualTo(_requestId));
+            context.RequestId.HasValue.ShouldBe(true);
+            context.RequestId.ShouldBe(_requestId);
         }
 
         Task<ConsumeContext<PingMessage>> _received;

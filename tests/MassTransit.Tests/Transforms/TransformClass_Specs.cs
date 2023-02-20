@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using MassTransit.Configuration;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -17,8 +18,8 @@
 
             ConsumeContext<A> result = await _received;
 
-            Assert.That(result.Message.First, Is.EqualTo("First"));
-            Assert.That(result.Message.Second, Is.EqualTo("Second"));
+            result.Message.First.ShouldBe("First");
+            result.Message.Second.ShouldBe("Second");
         }
 
         Task<ConsumeContext<A>> _received;

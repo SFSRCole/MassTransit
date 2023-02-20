@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using MassTransit.Initializers;
     using NUnit.Framework;
+    using Shouldly;
 
 
     [TestFixture]
@@ -22,9 +23,9 @@
             InitializeContext<IMessageType> context = await MessageInitializerCache<IMessageType>.Initialize(values);
 
             var message = context.Message;
-            Assert.That(message.CorrelationId, Is.EqualTo(values.CorrelationId));
-            Assert.That(message.Name, Is.EqualTo(values.Name));
-            Assert.That(message.Timestamp, Is.EqualTo(values.Timestamp));
+            message.CorrelationId.ShouldBe(values.CorrelationId);
+            message.Name.ShouldBe(values.Name);
+            message.Timestamp.ShouldBe(values.Timestamp);
         }
 
 

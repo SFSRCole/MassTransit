@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
 
 
     public class When_consumers_are_generic_classes
@@ -26,13 +27,13 @@
         [Test]
         public void Should_all_be_unique()
         {
-            Assert.That(_endpointNames.Distinct().Count(), Is.EqualTo(_endpointNames.Count()));
+            _endpointNames.Distinct().Count().ShouldBe(_endpointNames.Count());
         }
 
         [Test]
         public void Should_be_named_after_first_generic_parameter()
         {
-            Assert.That(_endpointNames, Is.EqualTo(new[] {nameof(Msg1), nameof(Msg2), nameof(Msg3)}));
+            _endpointNames.ShouldBe(new[] {nameof(Msg1), nameof(Msg2), nameof(Msg3)});
         }
 
 

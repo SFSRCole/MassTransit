@@ -3,6 +3,7 @@
     using System;
     using MassTransit.Middleware;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -27,7 +28,7 @@
 
             Assert.That(async () => await pipe.Send(context), Throws.TypeOf<IntentionalTestException>());
 
-            Assert.That(count, Is.EqualTo(5));
+            count.ShouldBe(5);
         }
 
         [Test]
@@ -49,7 +50,7 @@
 
             Assert.That(async () => await pipe.Send(context), Throws.TypeOf<IntentionalTestException>());
 
-            Assert.That(count, Is.EqualTo(1));
+            count.ShouldBe(1);
         }
 
         [Test]
@@ -71,7 +72,7 @@
 
             Assert.That(async () => await pipe.Send(context), Throws.TypeOf<IntentionalTestException>());
 
-            Assert.That(count, Is.EqualTo(5));
+            count.ShouldBe(5);
         }
 
         [Test]
@@ -107,7 +108,7 @@
 
             Assert.That(async () => await pipe.Send(context), Throws.TypeOf<IntentionalTestException>());
 
-            Assert.That(count, Is.EqualTo(1));
+            count.ShouldBe(1);
         }
 
 

@@ -3,6 +3,7 @@ namespace MassTransit.Tests
     using System;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Messages;
 
@@ -16,7 +17,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.FaultAddress, Is.Null);
+            ping.FaultAddress.ShouldBe(null);
         }
 
         [Test]
@@ -24,7 +25,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.ResponseAddress, Is.Null);
+            ping.ResponseAddress.ShouldBe(null);
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.CorrelationId, Is.EqualTo(_correlationId));
+            ping.CorrelationId.ShouldBe(_correlationId);
         }
 
         [Test]
@@ -40,7 +41,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.DestinationAddress, Is.EqualTo(InputQueueAddress));
+            ping.DestinationAddress.ShouldBe(InputQueueAddress);
         }
 
         [Test]
@@ -49,7 +50,7 @@ namespace MassTransit.Tests
             ConsumeContext<PingMessage> ping = await _ping;
 
             ping.Headers.TryGetHeader("One", out var header);
-            Assert.That(header, Is.EqualTo("1"));
+            header.ShouldBe("1");
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.SourceAddress, Is.EqualTo(BusAddress));
+            ping.SourceAddress.ShouldBe(BusAddress);
         }
 
         Task<ConsumeContext<PingMessage>> _ping;
@@ -91,7 +92,7 @@ namespace MassTransit.Tests
         {
             Response<PongMessage> message = await _request;
 
-            Assert.That(message.Message.CorrelationId, Is.EqualTo(_ping.Result.Message.CorrelationId));
+            message.Message.CorrelationId.ShouldBe(_ping.Result.Message.CorrelationId);
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PongMessage> context = await _responseHandler;
 
-            Assert.That(context.Message.CorrelationId, Is.EqualTo(_ping.Result.Message.CorrelationId));
+            context.Message.CorrelationId.ShouldBe(_ping.Result.Message.CorrelationId);
         }
 
         [Test]
@@ -107,7 +108,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.DestinationAddress, Is.EqualTo(InputQueueAddress));
+            ping.DestinationAddress.ShouldBe(InputQueueAddress);
         }
 
         [Test]
@@ -115,7 +116,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.ResponseAddress, Is.EqualTo(BusAddress));
+            ping.ResponseAddress.ShouldBe(BusAddress);
         }
 
         [Test]
@@ -123,7 +124,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PingMessage> ping = await _ping;
 
-            Assert.That(ping.SourceAddress, Is.EqualTo(BusAddress));
+            ping.SourceAddress.ShouldBe(BusAddress);
         }
 
         [Test]
@@ -131,7 +132,7 @@ namespace MassTransit.Tests
         {
             ConsumeContext<PongMessage> context = await _responseHandler;
 
-            Assert.That(context.ConversationId, Is.EqualTo(_conversationId));
+            context.ConversationId.ShouldBe(_conversationId);
         }
 
         Task<ConsumeContext<PingMessage>> _ping;
@@ -169,7 +170,7 @@ namespace MassTransit.Tests
 
             Response<PingNotSupported> message = await notSupported;
 
-            Assert.That(message.Message.CorrelationId, Is.EqualTo(_ping.Result.Message.CorrelationId));
+            message.Message.CorrelationId.ShouldBe(_ping.Result.Message.CorrelationId);
         }
 
         [Test]
@@ -217,7 +218,7 @@ namespace MassTransit.Tests
         {
             Response<PongMessage> message = await _request;
 
-            Assert.That(message.Message.CorrelationId, Is.EqualTo(_ping.Result.Message.CorrelationId));
+            message.Message.CorrelationId.ShouldBe(_ping.Result.Message.CorrelationId);
         }
 
         Task<ConsumeContext<PingMessage>> _ping;

@@ -3,6 +3,7 @@ namespace MassTransit.Tests.Serialization
     using System;
     using MassTransit.Serialization;
     using NUnit.Framework;
+    using Shouldly;
 
 
     [TestFixture(typeof(NewtonsoftJsonMessageSerializer))]
@@ -21,7 +22,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(obj);
 
-            Assert.That(result.Value, Is.EqualTo(obj.Value));
+            result.Value.ShouldBe(obj.Value);
         }
 
         [Test]
@@ -31,7 +32,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(obj);
 
-            Assert.That(result.Value, Is.EqualTo(obj.Value));
+            result.Value.ShouldBe(obj.Value);
         }
 
         [Test]
@@ -41,7 +42,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(obj);
 
-            Assert.That(result.Value, Is.EqualTo(obj.Value));
+            result.Value.ShouldBe(obj.Value);
         }
 
         [Test]
@@ -51,7 +52,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(obj);
 
-            Assert.That(result.Value, Is.EqualTo(obj.Value));
+            result.Value.ShouldBe(obj.Value);
         }
 
 
@@ -90,7 +91,7 @@ namespace MassTransit.Tests.Serialization
 
             var result = SerializeAndReturn(obj);
 
-            Assert.That(result.Body, Is.EqualTo(obj.Body));
+            result.Body.ShouldBe(obj.Body);
         }
 
 

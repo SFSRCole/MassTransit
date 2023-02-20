@@ -7,6 +7,7 @@
         using System.Threading.Tasks;
         using Internals;
         using NUnit.Framework;
+        using Shouldly;
         using TestFramework;
         using TestFramework.Messages;
         using Util;
@@ -66,7 +67,7 @@
 
                     await observer.SendFaulted;
 
-                    Assert.That(observer.PostSent.Status, Is.EqualTo(TaskStatus.WaitingForActivation));
+                    observer.PostSent.Status.ShouldBe(TaskStatus.WaitingForActivation);
                 }
             }
 

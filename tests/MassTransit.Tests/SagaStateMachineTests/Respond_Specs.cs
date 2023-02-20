@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -33,7 +34,7 @@
 
             Response<StatusReport> response = await _statusClient.GetResponse<StatusReport>(new StatusRequested(start.CorrelationId), TestCancellationToken);
 
-            Assert.That(response.Message.Status, Is.EqualTo(_machine.Running.Name));
+            response.Message.Status.ShouldBe(_machine.Running.Name);
         }
 
         [OneTimeSetUp]

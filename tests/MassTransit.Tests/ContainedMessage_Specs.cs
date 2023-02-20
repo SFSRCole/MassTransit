@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
 
 
@@ -20,9 +21,9 @@
         {
             ConsumeContext<SecureCommand<ExecuteSql>> context = await _secureCommandHandler;
 
-            Assert.That(context.Message.Credentials, Is.Not.Null);
+            context.Message.Credentials.ShouldNotBe(null);
 
-            Assert.That(context.Message.Credentials.Username, Is.EqualTo("sa"));
+            context.Message.Credentials.Username.ShouldBe("sa");
         }
 
         Task<ConsumeContext<SecureCommand<ExecuteSql>>> _secureCommandHandler;

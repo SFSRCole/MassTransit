@@ -5,6 +5,7 @@
     using MassTransit.Courier.Contracts;
     using MassTransit.Testing;
     using NUnit.Framework;
+    using Shouldly;
     using TestFramework;
     using TestFramework.Courier;
 
@@ -29,7 +30,7 @@
             await _reviseActivityCompleted;
             ConsumeContext<RoutingSlipActivityCompleted> testActivityResult = await _testActivityCompleted;
 
-            Assert.That(testActivityResult.GetArgument<string>("Value"), Is.EqualTo("Added"));
+            testActivityResult.GetArgument<string>("Value").ShouldBe("Added");
 
             ConsumeContext<RoutingSlipActivityCompleted> consumeContext = await _handled;
 
