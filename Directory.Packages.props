@@ -8,6 +8,7 @@
     <PackageVersion Include="AWSSDK.SimpleNotificationService" Version="3.7.101.89" />
     <PackageVersion Include="AWSSDK.S3" Version="3.7.108" />
     <PackageVersion Include="AWSSDK.SQS" Version="3.7.103.11" />
+    <PackageVersion Include="Azure.Data.Tables" Version="12.8.1" />
     <PackageVersion Include="Azure.Identity" Version="1.9.0" />
     <PackageVersion Include="Azure.Messaging.EventHubs.Processor" Version="5.9.2" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.15.0" />

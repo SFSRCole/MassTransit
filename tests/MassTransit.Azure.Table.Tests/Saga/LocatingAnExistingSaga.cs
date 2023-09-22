@@ -55,7 +55,7 @@
 
         public LocatingAnExistingSaga()
         {
-            _sagaRepository = new Lazy<ISagaRepository<SimpleSaga>>(() => AzureTableSagaRepository<SimpleSaga>.Create(() => TestCloudTable));
+            _sagaRepository = new Lazy<ISagaRepository<SimpleSaga>>(() => AzureTableSagaRepository<SimpleSaga>.Create(() => TestTableClient));
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

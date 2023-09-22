@@ -5,10 +5,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AzureTable;
-    using Microsoft.Azure.Cosmos.Table;
     using NUnit.Framework;
     using Shouldly;
-
+    using global::Azure.Data.Tables;
 
     [TestFixture]
     public class Configure_audit_store_supply_storage_account :
@@ -29,7 +28,7 @@
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            var storageAccount = CloudStorageAccount.Parse(ConnectionString);
+            var storageAccount = new TableServiceClient(ConnectionString);
             configurator.UseAzureTableAuditStore(storageAccount, TestTableName);
             base.ConfigureInMemoryBus(configurator);
         }

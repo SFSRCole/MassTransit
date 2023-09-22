@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AzureTable;
-    using Microsoft.Azure.Cosmos.Table;
+    using global::Azure.Data.Tables;
     using NUnit.Framework;
     using Shouldly;
 
@@ -22,7 +22,7 @@
             _records[0].PartitionKey.ShouldBe(PartitionKey);
         }
 
-        List<DynamicTableEntity> _records;
+        List<TableEntity> _records;
         readonly string PartitionKey = "TestPartitionKey";
 
         [OneTimeSetUp]
@@ -33,7 +33,7 @@
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            configurator.UseAzureTableAuditStore(TestCloudTable, new ConstantPartitionKeyFormatter(PartitionKey));
+            configurator.UseAzureTableAuditStore(TestTableClient, new ConstantPartitionKeyFormatter(PartitionKey));
         }
 
         protected override void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)

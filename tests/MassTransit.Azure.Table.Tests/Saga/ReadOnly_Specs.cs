@@ -44,7 +44,7 @@
 
             ISagaRepository<ReadOnlyInstance> CreateSagaRepository()
             {
-                return AzureTableSagaRepository<ReadOnlyInstance>.Create(() => TestCloudTable);
+                return AzureTableSagaRepository<ReadOnlyInstance>.Create(() => TestTableClient);
             }
 
             ReadOnlyStateMachine _machine;

@@ -1,9 +1,11 @@
 namespace MassTransit.Azure.Table.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Cosmos.Table;
+    using global::Azure.Data.Tables;
+    using MassTransit.Internals;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TestFramework;
@@ -21,7 +23,7 @@ namespace MassTransit.Azure.Table.Tests
             configurator.AddSagaRepository<FutureState>()
                 .AzureTableRepository(r =>
                 {
-                    r.ConnectionFactory(provider => provider.GetRequiredService<CloudTableClient>().GetTableReference(TableName));
+                    r.ConnectionFactory(provider => provider.GetRequiredService<TableServiceClient>().GetTableClient(TableName));
                 });
         }
 
@@ -30,43 +32,26 @@ namespace MassTransit.Azure.Table.Tests
             collection.AddSingleton(provider =>
                 {
                     var connectionString = Configuration.StorageAccount;
-                    var storageAccount = CloudStorageAccount.Parse(connectionString);
+                    var storageAccount = new TableServiceClient(connectionString);
 
                     return storageAccount;
-                })
-                .AddSingleton(provider =>
-                {
-                    var storageAccount = provider.GetRequiredService<CloudStorageAccount>();
-
-                    var tableClient = storageAccount.CreateCloudTableClient();
-
-                    return tableClient;
                 });
         }
 
         public async Task OneTimeSetup(IServiceProvider provider)
         {
-            var table = provider.GetRequiredService<CloudTableClient>().GetTableReference(TableName);
+            var table = provider.GetRequiredService<TableServiceClient>().GetTableClient(TableName);
 
             await table.CreateIfNotExistsAsync();
 
-            var query = new TableQuery();
-            TableQuerySegment<DynamicTableEntity> segment = await table.ExecuteQuerySegmentedAsync(query, null);
+            IList<ITableEntity> results = await table.QueryAsync<ITableEntity>(x => true).ToListAsync();
 
-            while (segment.Results.Count > 0)
-            {
-                foreach (IGrouping<string, DynamicTableEntity> key in segment.Results.GroupBy(x => x.PartitionKey))
-                {
-                    var batchDeleteOperation = new TableBatchOperation();
+            var batchDeleteOperation = new List<TableTransactionAction>();
 
-                    foreach (var row in key)
-                        batchDeleteOperation.Delete(row);
+            foreach (var row in results)
+                batchDeleteOperation.Add(new TableTransactionAction(TableTransactionActionType.Delete, row));
 
-                    await table.ExecuteBatchAsync(batchDeleteOperation);
-                }
-
-                segment = await table.ExecuteQuerySegmentedAsync(query, segment.ContinuationToken);
-            }
+            await table.SubmitTransactionAsync(batchDeleteOperation);
         }
 
         public Task OneTimeTearDown(IServiceProvider provider)

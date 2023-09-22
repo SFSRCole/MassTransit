@@ -4,7 +4,7 @@ namespace MassTransit.Configuration
     using System.Collections.Generic;
     using AzureTable;
     using AzureTable.Saga;
-    using Microsoft.Azure.Cosmos.Table;
+    using Azure.Data.Tables;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Saga;
 
@@ -14,25 +14,25 @@ namespace MassTransit.Configuration
         ISpecification
         where TSaga : class, ISaga
     {
-        Func<IServiceProvider, CloudTable> _connectionFactory;
+        Func<IServiceProvider, TableClient> _connectionFactory;
 
         Func<IServiceProvider, ISagaKeyFormatter<TSaga>> _formatterFactory = provider =>
             new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name);
 
         /// <summary>
-        /// Supply factory for retrieving the Cloud Table.
+        /// Supply factory for retrieving the Table Client.
         /// </summary>
         /// <param name="connectionFactory"></param>
-        public void ConnectionFactory(Func<CloudTable> connectionFactory)
+        public void ConnectionFactory(Func<TableClient> connectionFactory)
         {
             _connectionFactory = provider => connectionFactory();
         }
 
         /// <summary>
-        /// Supply factory for retrieving the Cloud Table.
+        /// Supply factory for retrieving the Table Client.
         /// </summary>
         /// <param name="connectionFactory"></param>
-        public void ConnectionFactory(Func<IServiceProvider, CloudTable> connectionFactory)
+        public void ConnectionFactory(Func<IServiceProvider, TableClient> connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
@@ -55,7 +55,7 @@ namespace MassTransit.Configuration
         public void Register<T>(ISagaRepositoryRegistrationConfigurator<T> configurator)
             where T : class, ISaga
         {
-            configurator.TryAddSingleton<ICloudTableProvider<TSaga>>(provider => new ConstCloudTableProvider<TSaga>(_connectionFactory(provider)));
+            configurator.TryAddSingleton<ITableClientProvider<TSaga>>(provider => new ConstTableClientProvider<TSaga>(_connectionFactory(provider)));
             configurator.TryAddSingleton(_formatterFactory);
             configurator.RegisterLoadSagaRepository<T, AzureTableSagaRepositoryContextFactory<T>>();
             configurator

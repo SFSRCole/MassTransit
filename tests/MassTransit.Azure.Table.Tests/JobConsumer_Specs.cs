@@ -4,15 +4,16 @@ namespace MassTransit.Azure.Table.Tests
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
     using Contracts.JobService;
     using JobConsumerTests;
-    using Microsoft.Azure.Cosmos.Table;
+    using global::Azure.Data.Tables;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using NUnit.Framework;
     using Testing;
-
+    using MassTransit.Internals;
 
     namespace JobConsumerTests
     {
@@ -60,17 +61,9 @@ namespace MassTransit.Azure.Table.Tests
                 .AddSingleton(provider =>
                 {
                     var connectionString = Configuration.StorageAccount;
-                    var storageAccount = CloudStorageAccount.Parse(connectionString);
+                    var tableServiceClient = new TableServiceClient(connectionString);
 
-                    return storageAccount;
-                })
-                .AddSingleton(provider =>
-                {
-                    var storageAccount = provider.GetRequiredService<CloudStorageAccount>();
-
-                    var tableClient = storageAccount.CreateCloudTableClient();
-
-                    return tableClient;
+                    return tableServiceClient;
                 })
                 .AddHostedService<CreateTableHostedService>()
                 .AddMassTransitTestHarness(x =>
@@ -91,7 +84,7 @@ namespace MassTransit.Azure.Table.Tests
                     x.AddJobSagaStateMachines()
                         .AzureTableRepository(r =>
                         {
-                            r.ConnectionFactory(provider => provider.GetRequiredService<CloudTableClient>().GetTableReference(TableName));
+                            r.ConnectionFactory(provider => provider.GetRequiredService<TableServiceClient>().GetTableClient(TableName));
                         });
 
                     x.UsingInMemory((context, cfg) =>
@@ -157,27 +150,18 @@ namespace MassTransit.Azure.Table.Tests
             {
                 _logger.LogInformation("Creating table configuration in Azure Table Storage");
 
-                var table = _provider.GetRequiredService<CloudTableClient>().GetTableReference(TableName);
+                var table = _provider.GetRequiredService<TableServiceClient>().GetTableClient(TableName);
 
                 await table.CreateIfNotExistsAsync(cancellationToken);
 
-                var query = new TableQuery();
-                TableQuerySegment<DynamicTableEntity> segment = await table.ExecuteQuerySegmentedAsync(query, null, cancellationToken);
+                var results = await table.QueryAsync<TableEntity>(x => true, null, null, cancellationToken).ToListAsync();
 
-                while (segment.Results.Count > 0)
-                {
-                    foreach (IGrouping<string, DynamicTableEntity> key in segment.Results.GroupBy(x => x.PartitionKey))
-                    {
-                        var batchDeleteOperation = new TableBatchOperation();
+                var batchDeleteOperation = new List<TableTransactionAction>();
 
-                        foreach (var row in key)
-                            batchDeleteOperation.Delete(row);
+                foreach (var row in results)
+                    batchDeleteOperation.Add(new TableTransactionAction(TableTransactionActionType.Delete, row));
 
-                        await table.ExecuteBatchAsync(batchDeleteOperation, cancellationToken);
-                    }
-
-                    segment = await table.ExecuteQuerySegmentedAsync(query, segment.ContinuationToken, cancellationToken);
-                }
+                await table.SubmitTransactionAsync(batchDeleteOperation, cancellationToken);
             }
 
             public async Task StopAsync(CancellationToken cancellationToken)

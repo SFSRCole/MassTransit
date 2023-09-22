@@ -36,7 +36,7 @@
 
         protected override void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
         {
-            configurator.UseAzureTableAuditStore(TestCloudTable);
+            configurator.UseAzureTableAuditStore(TestTableClient);
             base.ConfigureInMemoryBus(configurator);
         }
 

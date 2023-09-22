@@ -19,7 +19,7 @@ namespace MassTransit.Azure.Table.Tests.SlowConcurrentSaga
         public SlowConcurrentSaga_Specs()
         {
             _sagaRepository = new Lazy<ISagaRepository<SlowConcurrentSaga>>(() =>
-                AzureTableSagaRepository<SlowConcurrentSaga>.Create(() => TestCloudTable));
+                AzureTableSagaRepository<SlowConcurrentSaga>.Create(() => TestTableClient));
 
             _sagaTestHarness = BusTestHarness.StateMachineSaga(new SlowConcurrentSagaStateMachine(), _sagaRepository.Value);
         }

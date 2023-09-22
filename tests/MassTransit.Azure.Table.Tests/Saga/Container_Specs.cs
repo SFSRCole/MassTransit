@@ -54,7 +54,7 @@ namespace MassTransit.Azure.Table.Tests.Saga
                 configurator.AddSagaStateMachine<TestStateMachineSaga, TestInstance>()
                     .AzureTableRepository(cfg =>
                     {
-                        cfg.ConnectionFactory(() => TestCloudTable);
+                        cfg.ConnectionFactory(() => TestTableClient);
                     });
 
                 configurator.AddBus(provider => BusControl);
